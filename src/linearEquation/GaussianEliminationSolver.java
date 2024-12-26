@@ -1,6 +1,19 @@
 package linearEquation;
 
+import java.util.function.BiFunction;
+
 public class GaussianEliminationSolver implements Solver{
+
+    // Анонімний об'єкт
+    PrintArray printLikeAnswerForLinearEquation = new PrintArray() {
+        @Override
+        public void print(double[] arr) {
+            for (int i = 0; i < arr.length; i++){
+                System.out.printf("x%d = %.2f ", i + 1, arr[i]);
+            }
+        }
+    };
+
     @Description(description = "Використовується метод Гауса для розв'язання системи лінійних рівнянь")
     @Override
     public void solve(double[][] coefficients, double[] constants) {
@@ -33,10 +46,13 @@ public class GaussianEliminationSolver implements Solver{
                 matr[i][j] /= leadValue;
             }
 
+            // Лямбда-вираз
+            BiFunction<Double, Double, Double> multValue = (x, y) -> x * y;
+
             for (int k = i + 1; k < matr.length; k++) {
                 double factor = matr[k][lead];
                 for (int j = lead; j < matr[i].length; j++) {
-                    matr[k][j] -= factor * matr[i][j];
+                    matr[k][j] -= multValue.apply(factor, matr[i][j]);
                 }
             }
         }
@@ -90,9 +106,7 @@ public class GaussianEliminationSolver implements Solver{
                 answer[i] = answOne;
             }
             System.out.println("Рішення системи методом Гауса: ");
-            for (int i = 0; i < answer.length; i++){
-                System.out.printf("x%d = %.2f ", i + 1, answer[i]);
-            }
+            printLikeAnswerForLinearEquation.print(answer);
 
     }
 }

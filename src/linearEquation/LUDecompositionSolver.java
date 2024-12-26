@@ -1,6 +1,19 @@
 package linearEquation;
 
+import java.util.function.BiFunction;
+
 public class LUDecompositionSolver implements Solver{
+
+    // Анонімний об'єкт
+    PrintArray printLikeAnswerForLinearEquation = new PrintArray() {
+        @Override
+        public void print(double[] arr) {
+            for (int i = 0; i < arr.length; i++){
+                System.out.printf("x%d = %.2f ", i + 1, arr[i]);
+            }
+        }
+    };
+
     @Description(description = "Використовується LU розклад для розв'язання системи лінійних рівнянь")
     @Override
     public void solve(double[][] coefficients, double[] constants) {
@@ -68,9 +81,7 @@ public class LUDecompositionSolver implements Solver{
         }
 
         System.out.println("Рішення системи через LU-розкладання: ");
-        for (int i = 0; i < answer.length; i++){
-            System.out.printf("x%d = %.2f ", i + 1, answer[i]);
-        }
+        printLikeAnswerForLinearEquation.print(answer);
 
     }
 
@@ -102,10 +113,13 @@ public class LUDecompositionSolver implements Solver{
                 matr[i][j] /= leadValue;
             }
 
+            // Лямбда-вираз
+            BiFunction<Double, Double, Double> multValue = (x, y) -> x * y;
+
             for (int k = i + 1; k < matr.length; k++) {
                 double factor = matr[k][lead];
                 for (int j = lead; j < matr[i].length; j++) {
-                    matr[k][j] -= factor * matr[i][j];
+                    matr[k][j] -= multValue.apply(factor, matr[i][j]);
                 }
             }
         }
