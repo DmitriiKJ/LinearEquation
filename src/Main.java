@@ -1,8 +1,9 @@
+import linearEquation.Description;
 import linearEquation.GaussianEliminationSolver;
 import linearEquation.LUDecompositionSolver;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws NoSuchMethodException {
         System.out.println("====================Приклад 1====================");
         GaussianEliminationSolver gauss = new GaussianEliminationSolver();
         gauss.solve(new double[][] {
@@ -55,5 +56,11 @@ public class Main {
                         {1, -1, 1}
                 },
                 new double[] {1, 9, -8});
+
+        System.out.println("====================Анотації====================");
+        Description desc = gauss.getClass().getDeclaredMethod("solve", double[][].class, double[].class).getAnnotation(Description.class);
+        System.out.println(desc.description());
+        desc = LU.getClass().getDeclaredMethod("solve", double[][].class, double[].class).getAnnotation(Description.class);
+        System.out.println(desc.description());
     }
 }
